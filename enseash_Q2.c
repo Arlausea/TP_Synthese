@@ -1,7 +1,8 @@
-#include <unistd.h>
+#include <unistd.h> //For EXIT_SUCCESS/FAILURE
 #include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
+#include <stdio.h>
+#include <string.h> //For strlen
+#include <fcntl.h> //For open/creat
 #include <sys/wait.h>
 
 #define MAX_INPUT_SIZE 256
