@@ -4,24 +4,25 @@
 #include <string.h> //For strlen
 #include <fcntl.h> //For open/creat
 
+//Files descriptor
+int terminal = STDOUT_FILENO; //Sending arguments to terminal
 
-void main(int argc,char** argv){
-
+void shellDisplay(void) {
     //Informational Messages
-    char welcomeMessage[] = "Bienvenue dans le Shell ENSEA \nPour quitter, tapez 'exit'\n";
+    char welcomeMessage[] = "Welcome to ShellENSEA! \nType 'exit' to quit\n";
     char waitingPrompt[] = "enseash %\n";
-
-
-    //Variables
-
-    //Files descriptors
-    int terminal = STDOUT_FILENO; //Sending arguments to terminal
-
 
     //Displaying
     write(terminal,welcomeMessage,strlen(welcomeMessage));
     write(terminal,waitingPrompt,strlen(waitingPrompt));
 
+    close(terminal);
+
+}
+
+void main(int argc,char** argv){
+
+    shellDisplay();
     exit(EXIT_SUCCESS);
 
 }
