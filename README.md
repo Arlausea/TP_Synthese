@@ -1,4 +1,4 @@
-# TP_Synthese - ENSEA in the Shell
+# LAB - ENSEA in the Shell
 
 ## Objective
 
@@ -6,7 +6,14 @@ The main objective of this practical work is to create a micro shell, used to la
 
 ### Step 1 - Displaying a welcome message, followed by a simple prompt
 
-
+To display a message on our terminal, we are using a file descriptor:
+```
+int terminal = STDOUT_FILENO;
+```
+Then we are using the 'write()' function, which takes our file descriptor and the string we want to display.
+```
+write(terminal,welcomeMessage,strlen(welcomeMessage));
+```
 ### Step 2 - Execution of the entered command and return to the prompt
 
 
