@@ -15,9 +15,11 @@ void main(int argc,char** argv){
 
     //Variables
 
+    //Files Descriptors
     int terminal = STDOUT_FILENO; //Send arguments to terminal
 
 
+    //Main code
     write(terminal,welcomeMessage,strlen(welcomeMessage));
     write(terminal,waitingPrompt,strlen(waitingPrompt));
 
