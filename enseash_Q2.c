@@ -1,54 +1,49 @@
-#include <unistd.h> //For EXIT_SUCCESS/FAILURE
+#include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h> //For strlen
-#include <fcntl.h> //For open/creat
+#include <string.h>
+#include <fcntl.h>
 #include <sys/wait.h>
 
+#define MAX_INPUT_SIZE 256
 
-void main(int argc,char** argv){
-
-    //Informational Messages
-
+int main(int argc, char **argv) {
+    // Informational Messages
     char welcomeMessage[] = "Bienvenue dans le Shell ENSEA \nPour quitter, tapez 'exit'\n";
     char waitingPrompt[] = "enseash % ";
 
+    // File Descriptors
+    int terminal = STDOUT_FILENO; // Sending arguments to terminal
+    int fd_input = STDIN_FILENO;  // Getting arguments
 
-    //Variables
-
-    //Files Descriptors
-    int terminal = STDOUT_FILENO; //Send arguments to terminal
-    int fd_input = STDIN_FILENO; //Get arguments
-
-    //For fork
-    int pid;
-    int intputSize;
     int status;
 
-    //Input variable
-    char input[] = {0};
-    char inputArgs[] = {0};
+    // Input variable
+    char input[MAX_INPUT_SIZE];
+    int bytesRead;
 
-    //Main code
-    write(terminal,welcomeMessage,strlen(welcomeMessage));
-    write(terminal,waitingPrompt,strlen(waitingPrompt));
+    // Main code
+    write(terminal, welcomeMessage, sizeof(welcomeMessage)-1);
 
-    pid = fork();
-    if (pid == 0){ // Child code
+    while (1) {
+        write(terminal, waitingPrompt, sizeof(waitingPrompt)-1);
+
+        bytesRead = read(fd_input, input, sizeof(input));
+        input[bytesRead-1] = '\0';
         
-        intputSize=read(fd_input,input,sizeof(input));
-        while (strcmp(input,"\n")!=0){
-            read(fd_input,input,sizeof(input));
+
+        pid_t pid = fork();
+
+        if (pid <= -1) {
+
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) { // Child code
+            execlp(input,input,NULL);
+           
+            exit(EXIT_FAILURE);
+        } else {
+            wait(&status);
         }
-        execvp(input,NULL);
-        exit(EXIT_FAILURE);
-    }
-    else{
-        wait(&status);
-        write(terminal,waitingPrompt,strlen(waitingPrompt));
     }
 
-
-    exit(EXIT_SUCCESS);
-
+    return EXIT_SUCCESS;
 }
