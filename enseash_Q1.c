@@ -24,7 +24,8 @@ void main(int argc,char** argv){
 
     shellDisplay();
 
-    close(fd_input,terminal);
+    close(fd_input);
+    close(terminal);
     exit(EXIT_SUCCESS);
 
 }

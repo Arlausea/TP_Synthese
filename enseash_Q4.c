@@ -52,11 +52,7 @@ void command(char input[], int bytesRead){
 
     } else {
         wait(&status);
-        if (WIFEXITED(status)){
-            write(terminal,codeExit1,sizeof(codeExit1));
-            write(terminal,WEXITSTATUS(status),sizeof(WEXITSTATUS(status)));
-            write(terminal,codeExit2,sizeof(codeExit2));
-        }
+
 
     }
 }
@@ -68,12 +64,22 @@ int main(int argc, char **argv) {
     shellDisplay();
 
     while (1) {
+
         write(terminal, waitingPrompt, sizeof(waitingPrompt)-1);
 
         bytesRead = read(fd_input, input, sizeof(input));
         input[bytesRead-1] = '\0'; //Removing the '\n' at the end
 
         command(input, bytesRead);
+
+        if (WIFEXITED(status)){
+            //write(terminal,codeExit1,sizeof(codeExit1));
+            write(terminal,(int)WEXITSTATUS(status),sizeof(WEXITSTATUS(status)));
+            //write(terminal,codeExit2,sizeof(codeExit2));
+        }
+        else if(WIFSIGNALED(status)){
+            write(terminal,(int)WTERMSIG(status),sizeof(WTERMSIG(status)));
+        }
 
     }
 
