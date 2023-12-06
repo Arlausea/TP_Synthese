@@ -70,7 +70,7 @@ void command(char input[], int bytesRead){
 void return_code(void){
 
     int sprintfvalue;
-    time_elapsed = (endtime.tv_sec-starttime.tv_sec)-(endtime.tv_nsec-endtime.tv_nsec)/1e6;
+    time_elapsed = (endtime.tv_sec-starttime.tv_sec)+(endtime.tv_nsec-starttime.tv_nsec)/1e6;
     
     if (WIFEXITED(status)){
         exit_signal_status = WEXITSTATUS(status);
