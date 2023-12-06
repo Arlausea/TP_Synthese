@@ -8,6 +8,7 @@
 
 
 
+
 #define NANO_TO_MILLI(N) ((N)/ 1000000);
 #define MAX_INPUT_SIZE 256
 
@@ -20,28 +21,16 @@ int status;
 // Input variable
 char input[MAX_INPUT_SIZE];
 int bytesRead;
-char TimeBeforeCommand[];
-
-
 
 char waitingPrompt[MAX_INPUT_SIZE] = "";
 char exitSucesss[] = "\nEnd of ShellENSEA\nBye bye...\n";
-char codeExit1[] = "[exit:";
-char codeExit2[] = "]";
-char SignalExit[] = "[sign";
-char SignalExit2[] = "]";
+
+
+struct timespec starttime, endtime;
 
 int exit_signal_status;
+double time_elapsed;
 
-
-void getTime(char *_timeStr){
-    time_t milli;
-    struct timespec curTime;
-    
-    clock_gettime(CLOCK_REALTIME, &curTime);
-    milli = NANO_TO_MILLI(curTime.tv_nsec);
-
-}
 
 
 void shellDisplay(void) {
@@ -61,32 +50,35 @@ void command(char input[], int bytesRead){
     }
 
     pid_t pid = fork();
+       
 
     if (pid <= -1) {
 
         exit(EXIT_FAILURE);
 
     } else if (pid == 0) { // Child code
-        getTime(TimeBeforeCommand);
         execlp(input, input, NULL);
         exit(EXIT_SUCCESS);
 
     } else {
         wait(&status);
+        
 
     }
 }
 
 void return_code(void){
+
     int sprintfvalue;
+    time_elapsed = (endtime.tv_sec-starttime.tv_sec)-(endtime.tv_nsec-endtime.tv_nsec)/1e6;
     
     if (WIFEXITED(status)){
         exit_signal_status = WEXITSTATUS(status);
-        sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d|%sms] %% ",exit_signal_status,TimeBeforeCommand);
+        sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d|%d ms] %% ",exit_signal_status,time_elapsed);
     }
     else if(WIFSIGNALED(status)){
         exit_signal_status = WTERMSIG(status);
-        sprintfvalue = sprintf(waitingPrompt, "enseash [sign:%d|%dms] %% ",exit_signal_status);
+        sprintfvalue = sprintf(waitingPrompt, "enseash [sign:%d|%d ms] %% ",exit_signal_status, time_elapsed);
     }
     
 }
@@ -102,9 +94,9 @@ int main(int argc, char **argv) {
 
         bytesRead = read(fd_input, input, sizeof(input));
         input[bytesRead-1] = '\0'; //Removing the '\n' at the end
-
+        clock_gettime(CLOCK_REALTIME, &starttime);
         command(input, bytesRead);
-        
+        clock_gettime(CLOCK_REALTIME, &endtime);
 
     }
 

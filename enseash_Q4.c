@@ -19,10 +19,7 @@ int bytesRead;
 
 char waitingPrompt[MAX_INPUT_SIZE] = "";
 char exitSucesss[] = "End of ShellENSEA\nBye bye...\n";
-char codeExit1[] = "[exit:";
-char codeExit2[] = "]";
-char SignalExit[] = "[sign";
-char SignalExit2[] = "]";
+
 
 int exit_signal_status;
 
