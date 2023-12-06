@@ -46,12 +46,18 @@ if(strcmp(input,"exit") == 0 || bytesRead == 0){
         write(terminal,exitSucesss,sizeof(exitSucesss));
         exit(EXIT_SUCCESS);
 
-    }';
+    };
 ```
 "exit" is managed by a string comparison (strcmp), where the "Ctrl+d" management is made with the size of the buffer.
 
 ### Step 4 - Displaying the return code (or signal) of the previous command in the prompt
-
+We are using the 'sprintf()' functions, the principle of which is to format a string with the value of our exit code (the same thing is made for the signal code).
+```
+if (WIFEXITED(status)){
+    exit_signal_status = WEXITSTATUS(status);
+    sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d] %% ",exit_signal_status);
+}
+```
 ### Step 5 - Measurement of the command execution time using the call clock_gettime
 
 ### Step 6 - Execution of a complex command (with arguments)

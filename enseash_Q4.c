@@ -64,6 +64,7 @@ void command(char input[], int bytesRead){
 void return_code(void){
     int sprintfvalue;
     
+    //Return code for exit and signal
     if (WIFEXITED(status)){
         exit_signal_status = WEXITSTATUS(status);
         sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d] %% ",exit_signal_status); //'%%' allows to display '%' on the terminal
