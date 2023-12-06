@@ -8,7 +8,7 @@
 
 
 
-
+#define NANO_TO_MILLI(N) ((N)/ 1000000);
 #define MAX_INPUT_SIZE 256
 
 // File Descriptors
@@ -20,6 +20,9 @@ int status;
 // Input variable
 char input[MAX_INPUT_SIZE];
 int bytesRead;
+char TimeBeforeCommand[];
+
+
 
 char waitingPrompt[MAX_INPUT_SIZE] = "";
 char exitSucesss[] = "\nEnd of ShellENSEA\nBye bye...\n";
@@ -29,6 +32,16 @@ char SignalExit[] = "[sign";
 char SignalExit2[] = "]";
 
 int exit_signal_status;
+
+
+void getTime(char *_timeStr){
+    time_t milli;
+    struct timespec curTime;
+    
+    clock_gettime(CLOCK_REALTIME, &curTime);
+    milli = NANO_TO_MILLI(curTime.tv_nsec);
+
+}
 
 
 void shellDisplay(void) {
@@ -54,6 +67,7 @@ void command(char input[], int bytesRead){
         exit(EXIT_FAILURE);
 
     } else if (pid == 0) { // Child code
+        getTime(TimeBeforeCommand);
         execlp(input, input, NULL);
         exit(EXIT_SUCCESS);
 
@@ -68,11 +82,11 @@ void return_code(void){
     
     if (WIFEXITED(status)){
         exit_signal_status = WEXITSTATUS(status);
-        sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d] %% ",exit_signal_status);
+        sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d|%sms] %% ",exit_signal_status,TimeBeforeCommand);
     }
     else if(WIFSIGNALED(status)){
         exit_signal_status = WTERMSIG(status);
-        sprintfvalue = sprintf(waitingPrompt, "enseash [sign:%d] %% ",exit_signal_status);
+        sprintfvalue = sprintf(waitingPrompt, "enseash [sign:%d|%dms] %% ",exit_signal_status);
     }
     
 }
