@@ -17,13 +17,35 @@ write(terminal,welcomeMessage,strlen(welcomeMessage));
 ### Step 2 - Execution of the entered command and return to the prompt
 
 
+
 #### 2.a Reading the entered command.
+In order to read the commands entered on the prompt we are using the 'read()' function, which will take the file descriptor based on inputs :
+```
+bytesRead = read(fd_input, input, sizeof(input));
+```
+The input takes into account the line break, which needs to be removed in the input buffer to allow our command to execute.
+```
+input[bytesRead-1] = '\0';
+```
 
 #### 2.b Execution of a simple command (without arguments).
 
+The 'command()' function use fork process to execute commands. The excecution and the return to the prompt are managed by 'excelp()'.
+
+
 #### 2.c Returning to the prompt "enseash %" and waiting for the next command.
+The infinite loop allows the shell to display "enseash %" and waiting another prompts each time a command is executed.
 
 ### Step 3 - Handling the shell exit with the "exit" command or "Ctrl+d"
+Within the 'command()' function, we add a condition that allows us to exit the program when either "exit" or "Ctrl+d" is used.
+```
+if(strcmp(input,"exit") == 0 || bytesRead == 0){   
+        write(terminal,exitSucesss,sizeof(exitSucesss));
+        exit(EXIT_SUCCESS);
+
+    }';
+```
+"exit" is managed by a string comparison (strcmp), where the "Ctrl+d" management is made with the size of the buffer.
 
 ### Step 4 - Displaying the return code (or signal) of the previous command in the prompt
 
