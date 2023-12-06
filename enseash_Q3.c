@@ -32,6 +32,8 @@ void shellDisplay(void) {
 void command(char input[], int bytesRead){
     if(strcmp(input,"exit") == 0 || bytesRead == 0){   //Enter in if exit or ctrl+d
         write(terminal,exitSucesss,sizeof(exitSucesss));
+        close(fd_input);
+        close(terminal);
         exit(EXIT_SUCCESS);
 
     }
@@ -43,7 +45,9 @@ void command(char input[], int bytesRead){
         exit(EXIT_FAILURE);
 
     } else if (pid == 0) { // Child code
-        execlp(input,input,NULL);   
+        execlp(input,input,NULL);
+        close(fd_input);
+        close(terminal);   
         exit(EXIT_SUCCESS);
 
     } else {
@@ -67,7 +71,6 @@ int main(int argc, char **argv) {
         command(input, bytesRead);
 
     }
-    close(fd_input);
-    close(terminal);
+
     return EXIT_SUCCESS;
 }
