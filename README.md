@@ -14,9 +14,12 @@ Then we are using the 'write()' function, which takes our file descriptor and th
 ```
 write(terminal,welcomeMessage,strlen(welcomeMessage));
 ```
+We do not forget to close the file descriptors.
+```
+close(terminal);
+```
+
 ### Step 2 - Execution of the entered command and return to the prompt
-
-
 
 #### 2.a Reading the entered command.
 In order to read the commands entered on the prompt we are using the 'read()' function, which will take the file descriptor based on inputs :
