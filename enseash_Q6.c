@@ -7,9 +7,6 @@
 #include <time.h> //To get command for clock_gettime
 
 
-
-
-#define NANO_TO_MILLI(N) ((N)/ 1000000);
 #define MAX_INPUT_SIZE 256
 
 // File Descriptors
@@ -25,9 +22,9 @@ int bytesRead;
 char waitingPrompt[MAX_INPUT_SIZE] = "";
 char exitSucesss[] = "\nEnd of ShellENSEA\nBye bye...\n";
 
-
 struct timespec starttime, endtime;
 
+//Time control
 int exit_signal_status;
 double time_elapsed;
 
@@ -69,7 +66,7 @@ void command(char input[], int bytesRead){
 
         args[index] = NULL;
 
-        execvp(args[0], args); //Execution 
+        execvp(args[0], args); //Execution of every arguments
 
         close(fd_input);
         close(terminal);
@@ -89,6 +86,7 @@ void return_code(void){
     //Time conversion takes into account seconds and nanoseconds
     time_elapsed = (endtime.tv_sec-starttime.tv_sec)*1000+(endtime.tv_nsec-starttime.tv_nsec)/1e6;
     
+    //Return code for exit and signal
     if (WIFEXITED(status)){
         exit_signal_status = WEXITSTATUS(status);
         sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d|%.0f ms] %% ",exit_signal_status,time_elapsed);

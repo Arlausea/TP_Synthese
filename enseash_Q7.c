@@ -7,9 +7,6 @@
 #include <time.h> //To get command for clock_gettime
 
 
-
-
-#define NANO_TO_MILLI(N) ((N)/ 1000000);
 #define MAX_INPUT_SIZE 256
 
 // File Descriptors
@@ -26,6 +23,8 @@ char waitingPrompt[MAX_INPUT_SIZE] = "";
 char exitSucesss[] = "\nEnd of ShellENSEA\nBye bye...\n";
 
 
+
+//Time control
 struct timespec starttime, endtime;
 
 int exit_signal_status;
