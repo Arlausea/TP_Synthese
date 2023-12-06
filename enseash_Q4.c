@@ -39,6 +39,8 @@ void shellDisplay(void) {
 void command(char input[], int bytesRead){
     if(strcmp(input,"exit") == 0 || bytesRead == 0){   //Enter in if exit or ctrl+d
         write(terminal,exitSucesss,sizeof(exitSucesss));
+        close(fd_input);
+        close(terminal);
         exit(EXIT_SUCCESS);
 
     }
@@ -46,11 +48,14 @@ void command(char input[], int bytesRead){
     pid_t pid = fork();
 
     if (pid <= -1) {
-
+        close(fd_input);
+        close(terminal);
         exit(EXIT_FAILURE);
 
     } else if (pid == 0) { // Child code
         execlp(input, input, NULL);
+        close(fd_input);
+        close(terminal);
         exit(EXIT_SUCCESS);
 
     } else {
@@ -64,7 +69,7 @@ void return_code(void){
     
     if (WIFEXITED(status)){
         exit_signal_status = WEXITSTATUS(status);
-        sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d] %% ",exit_signal_status);
+        sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d] %% ",exit_signal_status); //'%%' allows to display '%' on the terminal
     }
     else if(WIFSIGNALED(status)){
         exit_signal_status = WTERMSIG(status);
@@ -90,7 +95,5 @@ int main(int argc, char **argv) {
 
     }
 
-    close(fd_input);
-    close(terminal);
     return EXIT_SUCCESS;
 }
