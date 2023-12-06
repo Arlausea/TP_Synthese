@@ -13,17 +13,19 @@ int fd_input = STDIN_FILENO;  // Getting arguments
 
 int status;
 
-
 // Input variable
 char input[MAX_INPUT_SIZE];
 int bytesRead;
 
-char waitingPrompt[] = "enseash % ";
+char waitingPrompt[MAX_INPUT_SIZE] = "";
 char exitSucesss[] = "End of ShellENSEA\nBye bye...\n";
 char codeExit1[] = "[exit:";
 char codeExit2[] = "]";
 char SignalExit[] = "[sign";
 char SignalExit2[] = "]";
+
+int exit_signal_status;
+
 
 void shellDisplay(void) {
     //Informational Messages
@@ -58,7 +60,21 @@ void command(char input[], int bytesRead){
     }
 }
 
+void return_code(void){
+    int sprintfvalue;
+    
+    if (WIFEXITED(status)){
+        exit_signal_status = WIFEXITED(status);
+        sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d] %% ",exit_signal_status);
+    }
+    else if(WIFSIGNALED(status)){
+        exit_signal_status = WTERMSIG(status);
+        sprintfvalue = sprintf(waitingPrompt, "enseash [sign:%d] %% ",exit_signal_status);
+    }
+    
+    write(terminal, waitingPrompt, sizeof(waitingPrompt)-1);
 
+}
 
 int main(int argc, char **argv) {
 
@@ -66,21 +82,13 @@ int main(int argc, char **argv) {
 
     while (1) {
 
-        write(terminal, waitingPrompt, sizeof(waitingPrompt)-1);
-
+        
+        return_code();
         bytesRead = read(fd_input, input, sizeof(input));
         input[bytesRead-1] = '\0'; //Removing the '\n' at the end
 
         command(input, bytesRead);
 
-        if (WIFEXITED(status)){
-            //write(terminal,codeExit1,sizeof(codeExit1));
-            write(terminal,(int)WEXITSTATUS(status),sizeof(WEXITSTATUS(status)));
-            //write(terminal,codeExit2,sizeof(codeExit2));
-        }
-        else if(WIFSIGNALED(status)){
-            write(terminal,(int)WTERMSIG(status),sizeof(WTERMSIG(status)));
-        }
 
     }
 
