@@ -70,15 +70,15 @@ void command(char input[], int bytesRead){
 void return_code(void){
 
     int sprintfvalue;
-    time_elapsed = (endtime.tv_sec-starttime.tv_sec)+(endtime.tv_nsec-starttime.tv_nsec)/1e6;
+    time_elapsed = (endtime.tv_nsec-starttime.tv_nsec)/1e6;
     
     if (WIFEXITED(status)){
         exit_signal_status = WEXITSTATUS(status);
-        sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d|%d ms] %% ",exit_signal_status,time_elapsed);
+        sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d|%.0f ms] %% ",exit_signal_status,time_elapsed);
     }
     else if(WIFSIGNALED(status)){
         exit_signal_status = WTERMSIG(status);
-        sprintfvalue = sprintf(waitingPrompt, "enseash [sign:%d|%d ms] %% ",exit_signal_status, time_elapsed);
+        sprintfvalue = sprintf(waitingPrompt, "enseash [sign:%d|%.0f ms] %% ",exit_signal_status, time_elapsed);
     }
     
 }
@@ -94,9 +94,9 @@ int main(int argc, char **argv) {
 
         bytesRead = read(fd_input, input, sizeof(input));
         input[bytesRead-1] = '\0'; //Removing the '\n' at the end
-        clock_gettime(CLOCK_REALTIME, &starttime);
+        clock_gettime(CLOCK_MONOTONIC, &starttime);
         command(input, bytesRead);
-        clock_gettime(CLOCK_REALTIME, &endtime);
+        clock_gettime(CLOCK_MONOTONIC, &endtime);
 
     }
 
