@@ -50,12 +50,11 @@ void command(char input[], int bytesRead){
         exit(EXIT_FAILURE);
 
     } else if (pid == 0) { // Child code
-        execlp(input,input,NULL);   
+        execlp(input, input, NULL);
         exit(EXIT_SUCCESS);
 
     } else {
         wait(&status);
-
 
     }
 }
@@ -64,7 +63,7 @@ void return_code(void){
     int sprintfvalue;
     
     if (WIFEXITED(status)){
-        exit_signal_status = WIFEXITED(status);
+        exit_signal_status = WEXITSTATUS(status);
         sprintfvalue = sprintf(waitingPrompt, "enseash [exit:%d] %% ",exit_signal_status);
     }
     else if(WIFSIGNALED(status)){
@@ -72,7 +71,7 @@ void return_code(void){
         sprintfvalue = sprintf(waitingPrompt, "enseash [sign:%d] %% ",exit_signal_status);
     }
     
-    write(terminal, waitingPrompt, sizeof(waitingPrompt)-1);
+    
 
 }
 
@@ -81,9 +80,9 @@ int main(int argc, char **argv) {
     shellDisplay();
 
     while (1) {
-
-        
         return_code();
+        write(terminal, waitingPrompt, sizeof(waitingPrompt)-1);
+
         bytesRead = read(fd_input, input, sizeof(input));
         input[bytesRead-1] = '\0'; //Removing the '\n' at the end
 
