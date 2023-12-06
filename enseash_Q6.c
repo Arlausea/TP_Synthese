@@ -58,7 +58,19 @@ void command(char input[], int bytesRead){
         exit(EXIT_FAILURE);
 
     } else if (pid == 0) { // Child code
-        execlp(input, input, NULL);
+        char *token = strtok(input, " "); //Splitting the input according the " " separator
+        char *args[MAX_INPUT_SIZE];
+
+        int index = 0;
+        while (token != NULL){
+            args[index++] = token;
+            token = strtok(NULL, " "); //Moving to the next value
+        }
+
+        args[index] = NULL;
+
+        execvp(args[0], args); //Execution 
+
         close(fd_input);
         close(terminal);
         exit(EXIT_SUCCESS);
