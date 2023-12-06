@@ -19,6 +19,10 @@ int bytesRead;
 
 char waitingPrompt[] = "enseash % ";
 char exitSucesss[] = "End of ShellENSEA\nBye bye...\n";
+char codeExit1[] = "[exit:";
+char codeExit2[] = "]";
+char SignalExit[] = "[sign";
+char SignalExit2[] = "]";
 
 void shellDisplay(void) {
     //Informational Messages
@@ -48,6 +52,11 @@ void command(char input[], int bytesRead){
 
     } else {
         wait(&status);
+        if (WIFEXITED(status)){
+            write(terminal,codeExit1,sizeof(codeExit1));
+            write(terminal,WEXITSTATUS(status),sizeof(WEXITSTATUS(status)));
+            write(terminal,codeExit2,sizeof(codeExit2));
+        }
 
     }
 }
@@ -68,6 +77,7 @@ int main(int argc, char **argv) {
 
     }
 
-    close(fd_input,terminal);
+    close(fd_input);
+    close(terminal);
     return EXIT_SUCCESS;
 }
