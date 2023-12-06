@@ -53,11 +53,14 @@ void command(char input[], int bytesRead){
        
 
     if (pid <= -1) {
-
+        close(fd_input);
+        close(terminal);
         exit(EXIT_FAILURE);
 
     } else if (pid == 0) { // Child code
         execlp(input, input, NULL);
+        close(fd_input);
+        close(terminal);
         exit(EXIT_SUCCESS);
 
     } else {
@@ -102,7 +105,5 @@ int main(int argc, char **argv) {
 
     }
 
-    close(fd_input);
-    close(terminal);
     return EXIT_SUCCESS;
 }
