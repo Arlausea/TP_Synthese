@@ -59,6 +59,6 @@ int main(int argc, char **argv) {
         command(input);
 
     }
-
+    close(fd_input,terminal);
     return EXIT_SUCCESS;
 }

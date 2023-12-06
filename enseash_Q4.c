@@ -68,5 +68,6 @@ int main(int argc, char **argv) {
 
     }
 
+    close(fd_input,terminal);
     return EXIT_SUCCESS;
 }

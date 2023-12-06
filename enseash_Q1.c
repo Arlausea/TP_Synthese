@@ -23,6 +23,8 @@ void shellDisplay(void) {
 void main(int argc,char** argv){
 
     shellDisplay();
+
+    close(fd_input,terminal);
     exit(EXIT_SUCCESS);
 
 }
