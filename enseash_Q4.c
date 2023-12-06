@@ -71,8 +71,6 @@ void return_code(void){
         sprintfvalue = sprintf(waitingPrompt, "enseash [sign:%d] %% ",exit_signal_status);
     }
     
-    
-
 }
 
 int main(int argc, char **argv) {
@@ -80,6 +78,7 @@ int main(int argc, char **argv) {
     shellDisplay();
 
     while (1) {
+
         return_code();
         write(terminal, waitingPrompt, sizeof(waitingPrompt)-1);
 
@@ -87,7 +86,7 @@ int main(int argc, char **argv) {
         input[bytesRead-1] = '\0'; //Removing the '\n' at the end
 
         command(input, bytesRead);
-
+        
 
     }
 
