@@ -13,6 +13,7 @@ int fd_input = STDIN_FILENO;  // Getting arguments
 
 int status;
 
+
 // Input variable
 char input[MAX_INPUT_SIZE];
 int bytesRead;
