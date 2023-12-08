@@ -67,7 +67,7 @@ We can enhance the previous code by displaying the elapsed time using the "clock
     }
 ```
 time_elapsed in milliseconds is calculated by using this formula :
-$ \Delta t_{ms} = \Delta t_s+\frac{\Delta t_{ns}}{1\times10^{6}}$
+$ \Delta t_{ms} = \Delta t_s+\frac{\Delta t_{ns}}{1\times10^{6}} $
 ### Step 6 - Execution of a complex command (with arguments)
 To provide multiple arguments to our terminal, we use the 'strtok()' function inside the child code to split our input into words according to spaces:
 ```c
