@@ -2,7 +2,7 @@
 
 ## Objective
 
-The main objective of this practical work is to ccreate a client program capable of exchanging files using the Trivial File Transfer
+The main objective of this practical work is to create a client program capable of exchanging files using the Trivial File Transfer
 Protocol (TFTP).
 
 ### Step 0 - Server Testing
@@ -27,6 +27,7 @@ We begin by checking that the entered command lines are in the correct format :
 * We confirm that the file is a regular file.
 
 ### Step 2 - Calling getaddrinfo to obtain the server’s address.
+
 
 
 ### Step 3 - Reserve a connection socket to the server.
