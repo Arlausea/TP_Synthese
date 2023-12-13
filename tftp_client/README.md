@@ -20,6 +20,11 @@ tftp> get test.txt
 
 ### Step 1 - Using command-line arguments for the gettftp and puttftp programs to obtain request information (server and file).
 
+We begin by checking that the entered command lines are in the correct format : 
+
+* We verify that the number of arguments is the expected value.
+* We check if the file exists.
+* We confirm that the file is a regular file.
 
 ### Step 2 - Calling getaddrinfo to obtain the server’s address.
 
