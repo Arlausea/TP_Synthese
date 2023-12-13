@@ -18,6 +18,21 @@ Afterwards, we can verify if the connection was successful by retrieving a test 
 tftp> get test.txt
 ```
 
+![](img/package.png)
+
+We got the sequence:
+```
+00 01 74 65 73 74 6e 74 78 74 00 6e 65 74 61 73 63 69 69 00"
+```
+![](img/doc.png)
+
+According to the documentation, our structure provides the following information:
+
+* Opcode: 00 01 (Read request - RRQ)
+* Filename: 74 65 73 74 6e 74 78 74 00 (ASCII representation of "test.txt" followed by a null terminator)
+* 0: Null byte as a separator
+* Mode: 6e 65 74 61 73 63 69 69 00 (ASCII representation of "netascii" followed by a null terminator)
+
 ### Step 1 - Using command-line arguments for the gettftp and puttftp programs to obtain request information (server and file).
 
 We begin by checking that the entered command lines are in the correct format : 
