@@ -33,7 +33,7 @@ struct stat sbFileInput;
 // Addrinfo
 
 struct addrinfo hints;
-struct addrinfo * result;
+struct addrinfo * result = 0;
 int status;
 
 
@@ -59,10 +59,10 @@ void checkFormat(int argc, char ** argv){
 
 void getInfo(char * hostname,struct addrinfo hints){
 
-    memset(&hints,0,sizeof(struct addrinfo));
+    memset(&hints,0,sizeof(hints));
 
     hints.ai_protocol=IPPROTO_UDP;
-    hints.ai_socktype=SOCK_STREAM;
+    hints.ai_socktype = SOCK_DGRAM;
     hints.ai_family=AF_INET;
     getaddrinfo(hostname,PORT,&hints,&result);
     // if(status = getaddrinfo(hostname,PORT,&hints,&result) != 0){
