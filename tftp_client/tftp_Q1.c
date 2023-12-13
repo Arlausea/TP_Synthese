@@ -15,7 +15,7 @@
 
 // Defined messages
 
-#define NOT_ENOUGH_ARGS "Not enough arguments or too much arguments | Required : 2 arguments\n"
+#define NOT_ENOUGH_ARGS "Not enough arguments or too much arguments | Required : 3 arguments\n"
 #define NO_FILE "File does not exist. Please repeat the process.\n"
 #define NOT_REGULAR "Warning! File is not ordinary.\n"
 #define NOT_HOST "Hostname not reachable. Please provide a new one"
@@ -27,13 +27,13 @@ struct stat sbFileInput;
 
 
 void checkFormat(int argc, char ** argv){
-    if (argc!=3){
+    if (argc!=4){
         write(terminal,NOT_ENOUGH_ARGS,sizeof(NOT_ENOUGH_ARGS));
         close(terminal);
         exit(EXIT_FAILURE);
     }
 
-    if (stat(argv[2],&sbFileInput) == -1){
+    if (stat(argv[3],&sbFileInput) == -1){
         write(terminal,NO_FILE,sizeof(NO_FILE));
         close(terminal);
         exit(EXIT_FAILURE);
@@ -45,11 +45,6 @@ void checkFormat(int argc, char ** argv){
         exit(EXIT_FAILURE);
     }
 
-    // Don't work for now I think
-    if (execlp("ping",argv[1],"-c","1",NULL) != 2){
-        write(terminal,NOT_HOST,sizeof(NOT_HOST));
-        exit(EXIT_FAILURE);
-    }
 
 
 }
