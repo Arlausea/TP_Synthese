@@ -44,9 +44,6 @@ void checkFormat(int argc, char ** argv){
         close(terminal);
         exit(EXIT_FAILURE);
     }
-
-
-
 }
 
 int main(int argc,char ** argv){
