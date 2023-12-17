@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <sys/stat.h> 
 #include <memory.h>
+#include <errno.h>
 
 
 // Information about Hostname & Filename
@@ -13,6 +14,8 @@
     char bufferServerName[128];
     char fileName[128];
     char ipAdress[128];
+
+    char * errorMessage;
 
 // Macros
 
@@ -23,15 +26,16 @@
 
 #define IP_SHOW "Communication with : "
 #define PORT_SHOW ":"
-
-
 #define PORT "69"
 
+#define ERROR_SOCKET "Error socket : "
+#define ERROR_CONNECTION "Error connection with the socket : "
 
 // Files Descriptors
 
 int terminal = STDOUT_FILENO;
 struct stat sbFileInput;
+int socketDescriptor;
 
 // Addrinfo
 
@@ -90,12 +94,34 @@ void getInfo(char * hostname,struct addrinfo hints){
 }
 
 
+void reservSocket(struct addrinfo * res){
+
+    if (socketDescriptor = socket(res->ai_family,res->ai_socktype,res->ai_protocol) == -1 ){
+        write(terminal,ERROR_SOCKET,sizeof(ERROR_SOCKET));
+        errorMessage = strerror(errno);
+        write(terminal,errorMessage,strlen(errorMessage));
+        write(terminal,"\n",sizeof("\n"));
+        exit(EXIT_FAILURE);
+    } 
+    if(connect(socketDescriptor,res->ai_addr,res->ai_addrlen) == -1){
+        write(terminal,ERROR_CONNECTION,sizeof(ERROR_CONNECTION));
+        errorMessage = strerror(errno);
+        write(terminal,errorMessage,strlen(errorMessage));
+        write(terminal,"\n",sizeof("\n"));
+        exit(EXIT_FAILURE);
+    }
+}
+
+
 int main(int argc,char ** argv){
 
     checkFormat(argc,argv);
 
     getInfo(argv[2],hints);
+    reservSocket(result);
 
+    freeaddrinfo(result);
+    close(socketDescriptor);
     close(terminal);
     return 0;
 }
