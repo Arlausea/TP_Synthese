@@ -26,7 +26,7 @@ We got the sequence:
 ```
 ![](img/doc.png)
 
-According to the documentation, our structure provides the following information:
+According to the documentation, our structure provides the following informations:
 
 * Opcode: 00 01 (Read request - RRQ)
 * Filename: 74 65 73 74 6e 74 78 74 00 (ASCII representation of "test.txt" followed by a null terminator)
