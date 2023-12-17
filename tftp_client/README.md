@@ -14,7 +14,7 @@ tftp srvtpinfo1.ensea.fr
 ``` 
 
 Afterwards, we can verify if the connection was successful by retrieving a test file stored on the server.
-```shell
+```
 tftp> get test.txt
 ```
 
