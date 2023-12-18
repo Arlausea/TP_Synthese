@@ -4,14 +4,14 @@
 #include <sys/stat.h> 
 
 
-// Macros messages 
+//Macros 
 
 #define NOT_ENOUGH_ARGS "Not enough arguments or too much arguments | Required : 3 arguments\n"
 #define NO_FILE "File does not exist. Please repeat the process.\n"
 #define NOT_REGULAR "Warning! File is not ordinary.\n"
 #define NOT_HOST "Hostname not reachable. Please provide a new one"
 
-// Files Descriptors
+//Files Descriptors
 
 int terminal = STDOUT_FILENO;
 
