@@ -24,13 +24,15 @@ void checkFormat(int argc, char ** argv){
         exit(EXIT_FAILURE);
     }
 
+
+    //Theses points are verified only if we made a "put" request
     if (stat(argv[3], &sbFileInput) == -1 && strcmp(argv[1],"put") == 0){
         write(terminal,NO_FILE,sizeof(NO_FILE));
         close(terminal);
         exit(EXIT_FAILURE);
     }
 
-    if (!S_ISREG(sbFileInput.st_mode)){
+    if (!S_ISREG(sbFileInput.st_mode) && strcmp(argv[1],"put") == 0){
         write(terminal,NOT_REGULAR,sizeof(NOT_REGULAR));
         close(terminal);
         exit(EXIT_FAILURE);
