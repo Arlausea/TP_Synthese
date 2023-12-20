@@ -6,27 +6,26 @@
 #include <stdlib.h>
 #include <sys/stat.h> 
 #include <memory.h>
-
-
-// Information about Hostname & Filename
-
-    char bufferServerName[128];
-    char fileName[128];
-    char ipAdress[128];
+#include <string.h>
 
 // Macros
 
 #define NOT_ENOUGH_ARGS "Not enough arguments or too much arguments | Required : 3 arguments\n"
 #define NO_FILE "File does not exist. Please repeat the process.\n"
 #define NOT_REGULAR "Warning! File is not ordinary.\n"
-#define ERROR_STAT "Status error :"
+#define ERROR_STATUS "Status error :"
 
 #define IP_SHOW "Communication with : "
 #define PORT_SHOW ":"
 
-
 #define PORT "69"
+#define MAX_CHAR_SIZE 128
 
+// Information about Hostname & Filename
+
+char bufferServerName[MAX_CHAR_SIZE];
+char fileName[MAX_CHAR_SIZE];
+char ipAdress[MAX_CHAR_SIZE];
 
 // Files Descriptors
 
@@ -36,7 +35,7 @@ struct stat sbFileInput;
 // Addrinfo
 
 struct addrinfo hints;
-struct addrinfo * result = 0;
+struct addrinfo * result = NULL;
 int status;
 
 
@@ -60,25 +59,31 @@ void checkFormat(int argc, char ** argv){
     }
 }
 
-void getInfo(char * hostname,struct addrinfo hints){
+
+void getInfo(char * hostname, struct addrinfo hints){
 
     memset(&hints,0,sizeof(hints));
 
     hints.ai_protocol=IPPROTO_UDP;
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_family=AF_INET;
-    getaddrinfo(hostname,PORT,&hints,&result);
-    if(status = getaddrinfo(hostname,PORT,&hints,&result) != 0){
-        write(terminal,ERROR_STAT,sizeof(ERROR_STAT));
+    
+    //HUH??
+    status = getaddrinfo(hostname,PORT,&hints,&result);
+    
+    if(status != 0){
+        write(terminal,ERROR_STATUS,sizeof(ERROR_STATUS));
         write(terminal,gai_strerror(status),sizeof(gai_strerror(status)));
-        write(terminal,"\n",sizeof("\n"));
+        write(terminal,"\n",1);
         exit(EXIT_FAILURE);
     }
-    status = getnameinfo(result->ai_addr,result->ai_addrlen,ipAdress,128,bufferServerName,128,NI_NUMERICHOST | NI_NUMERICSERV);
+
+    // Call getaddrinfo to obtain the server's address
+    status = getnameinfo(result->ai_addr,result->ai_addrlen,ipAdress,MAX_CHAR_SIZE,bufferServerName,MAX_CHAR_SIZE, NI_NUMERICHOST | NI_NUMERICSERV);
 
     if(status !=0){
         write(terminal,gai_strerror(status),sizeof(gai_strerror(status)));
-        write(terminal,"\n",sizeof("\n"));
+        write(terminal,"\n",1);
     }
 
     // Show the result
@@ -86,16 +91,21 @@ void getInfo(char * hostname,struct addrinfo hints){
     write(terminal,ipAdress,strlen(ipAdress));
     write(terminal,PORT_SHOW,sizeof(PORT_SHOW));
     write(terminal,bufferServerName,strlen(bufferServerName));
-    write(terminal,"\n",sizeof("\n"));
+    write(terminal,"\n",1);
+
+    freeaddrinfo(result);
 }
+
 
 
 int main(int argc,char ** argv){
 
     checkFormat(argc,argv);
 
-    getInfo(argv[2],hints);
+    getInfo(argv[2], hints);
 
     close(terminal);
     return 0;
 }
+
+
