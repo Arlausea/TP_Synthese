@@ -96,14 +96,16 @@ void getInfo(char * hostname,struct addrinfo hints){
 
 void reservSocket(struct addrinfo * res){
 
-    if (socketDescriptor = socket(res->ai_family,res->ai_socktype,res->ai_protocol) == -1 ){
+
+    socketDescriptor = socket(res->ai_family,res->ai_socktype,res->ai_protocol);
+    if (socketDescriptor == -1 ){
         write(terminal,ERROR_SOCKET,sizeof(ERROR_SOCKET));
         errorMessage = strerror(errno);
         write(terminal,errorMessage,strlen(errorMessage));
         write(terminal,"\n",sizeof("\n"));
         exit(EXIT_FAILURE);
     } 
-    if(connect(socketDescriptor,res->ai_addr,res->ai_addrlen) == -1){
+    if((connect(socketDescriptor,res->ai_addr,res->ai_addrlen)) < 0){
         write(terminal,ERROR_CONNECTION,sizeof(ERROR_CONNECTION));
         errorMessage = strerror(errno);
         write(terminal,errorMessage,strlen(errorMessage));
