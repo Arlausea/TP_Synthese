@@ -33,7 +33,6 @@ int terminal = STDOUT_FILENO;
 struct stat sbFileInput;
 
 // Addrinfo
-
 struct addrinfo hints;
 struct addrinfo * result = NULL;
 int status;
@@ -46,7 +45,7 @@ void checkFormat(int argc, char ** argv){
         exit(EXIT_FAILURE);
     }
 
-    if (stat(argv[3],&sbFileInput) == -1){
+    if (stat(argv[3], &sbFileInput) == -1 && strcmp(argv[1],"put") == 0){
         write(terminal,NO_FILE,sizeof(NO_FILE));
         close(terminal);
         exit(EXIT_FAILURE);
@@ -68,7 +67,7 @@ void getInfo(char * hostname, struct addrinfo hints){
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_family=AF_INET;
     
-    //HUH??
+    // Call getaddrinfo to obtain the server's address
     status = getaddrinfo(hostname,PORT,&hints,&result);
     
     if(status != 0){
@@ -78,7 +77,7 @@ void getInfo(char * hostname, struct addrinfo hints){
         exit(EXIT_FAILURE);
     }
 
-    // Call getaddrinfo to obtain the server's address
+
     status = getnameinfo(result->ai_addr,result->ai_addrlen,ipAdress,MAX_CHAR_SIZE,bufferServerName,MAX_CHAR_SIZE, NI_NUMERICHOST | NI_NUMERICSERV);
 
     if(status !=0){
