@@ -43,30 +43,51 @@ We begin by checking that the entered command lines are in the correct format :
 
 ### Step 2 - Calling getaddrinfo to obtain the server’s address.
 
-
+We use a 'hints' structure to obtain the server's address. 
+```c
+    memset(&hints,0,sizeof(hints));
+    hints.ai_protocol=IPPROTO_UDP;
+    hints.ai_socktype = SOCK_DGRAM;
+    hints.ai_family=AF_INET;
+```
+We set the parameters of the structure to search for the address of our server, with UDP type for the IPv4 family. The port used is also specified inside of a macro.
+```c
+status = getnameinfo(result->ai_addr, result->ai_addrlen, ipAdress, MAX_CHAR_SIZE, bufferServerName, MAX_CHAR_SIZE, NI_NUMERICHOST | NI_NUMERICSERV);
+```
+We then store the result of 'getaddrinfo' in an addrinfo structure (result), and if the status is not an error, we display the retrieved IP address.
+```shell
+$ ./tftp_Q4 get srvtpinfo1.ensea.fr test.txt
+Communication with : 10.10.32.11:69
+```
 
 ### Step 3 - Reserve a connection socket to the server.
 
+For establishing a connection to the server, we create a socket using information from our previous structure. 
+```c
+socketDescriptor = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+```
+We check for errors during socket creation and connection establishment.
+
+We will then can then use our 'socketDescriptor' to send and receive requests from the server."
 
 ### Step 4 - Gettftp management
 
+The 'gettftp' function is responsible for handling the process of retrieving a file from the TFTP server. 
 
-#### 4.a Build a properly formed Read Request (RRQ) and send it to the server
+We generate a TFTP Read Request (RRQ) packet, which includes the opcode (00 01), the filename in ASCII representation, a null byte separator (00), and the transfer mode (netascii followed by a null terminator) :
+```c
+char data[2 + strlen(filename) + strlen(filename) + 2];
+data[0] = 0x00; 
+data[1] = 0x01;
+strcpy(data + 2, filename);
+strcpy(data + 2 + strlen(filename) + 1, "netascii");
+```
+The RRQ packet is sent to the server by with a 'write' function using the socketDesciptor'. The function 'chooseCommand' allows us to manage whether we send a gettftp or puttftp request.
 
+We can directly confirm that the packet has been successfully sent as expected by checking on Wireshark. For example with:
+```shell
+$ ./tftp_Q4 get srvtpinfo1.ensea.fr test.txt
+```
+we got the following sequence:
 
-#### 4.b Receive a file consisting of a single Data (DAT) packet and its acknowledgment (ACK).
-
-
-#### 4.c Receive a file consisting of multiple Data (DAT) packets and their respective acknowledgments (ACK).
-
-
-### Step 5 - Puttftp management
-
-
-#### 5.a Build a properly formed Write Request (WRQ) and send it to the server
-
-
-#### 5.b Receive a file consisting of a single Data (DAT) packet and its acknowledgment (ACK).
-
-
-#### 5.c Receive a file consisting of multiple Data (DAT) packets and their respective acknowledgments (ACK).
+![](img/package2.png)
